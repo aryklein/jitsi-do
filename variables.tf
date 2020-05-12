@@ -6,7 +6,7 @@ variable "do_token" {
 
 variable "terraform_ssh_pub_key" {
   description = "Terraform public SSH key"
-  default     = "./terraform-do.pub"
+  default     = "~/.ssh/terraform-do.pub"
 }
 
 variable "region" {
