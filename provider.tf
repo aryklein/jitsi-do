@@ -1,7 +1,7 @@
 # Terraform version and provider
 
 terraform {
-  required = ">= 0.12"
+  required_version = ">= 0.12"
 }
 
 provider "digitalocean" {
