@@ -1,0 +1,21 @@
+#cloud-config
+
+# os upgrade
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+# create ansible user
+users:
+  - default
+  - name: ansible
+    gecos: Anible User
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${init_terrafor_ssh_pub_key}
+
+# disable root login
+runcmd:
+  - sed -i 's/#*PermitRootLogin.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - systemctl restart sshd

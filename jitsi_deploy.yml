@@ -1,0 +1,58 @@
+---
+
+- name: deploy Jitsi server
+  hosts: jitsi
+  become_method: sudo
+  become: true
+
+  vars:
+    jitsi_http_port: 80
+    jitsi_https_port: 443
+    jitsi_domain: meet.kleinerman.org
+    jitsi_email: kleinerman@gmail.com
+    jitsi_config_dir: /var/lib/jitsi-meet-cfg
+    jitsi_time_zone: America/Argentina/Cordoba
+    jitsi_dir: /var/lib/jitsi-meet
+
+  tasks:
+    - name: install docker and docker-compose
+      apt:
+        update_cache: yes
+        name:
+          - docker.io
+          - docker-compose
+      tags: docker-install
+
+    - name: clone Jitsi repository
+      git:
+        repo: https://github.com/jitsi/docker-jitsi-meet.git
+        dest: "{{ jitsi_dir }}"
+        depth: 1
+      tags: git-clone
+
+    - name: copy config
+      template:
+        src: env.j2
+        dest: "{{ jitsi_dir }}/.env"
+      tags: config-file
+
+    - name: create config directories
+      file:
+        path: "{{ jitsi_config_dir }}/{{ item }}"
+        state: directory
+      loop:
+        - web/letsencrypt
+        - transcripts
+        - prosody/config
+        - prosody/prosody-plugins-custom
+        - jicofo
+        - jvb
+        - jigasi
+        - jibri
+      tags: config-dir
+
+    - name: start containers
+      docker_compose:
+        state: present
+        project_src: "{{ jitsi_dir }}"
+      tags: docker-start
