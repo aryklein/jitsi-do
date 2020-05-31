@@ -50,7 +50,7 @@ Docker Compose, execute this Ansible Playbook:
 ```
 
 This playbook will execute all steps described
-[here] (https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker)
+[here](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker)
 
 ## To-do
 - Make the ansible playbook idempotent
